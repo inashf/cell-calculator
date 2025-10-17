@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cell Seeding Calculator - Online</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .calculator {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+        
+        h1 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 28px;
+            text-align: center;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .input-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            color: #4a5568;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .hint {
+            margin-top: 5px;
+            font-size: 12px;
+            color: #a0aec0;
+        }
+        
+        .calculate-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 25px;
+        }
+        
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .results {
+            margin-top: 35px;
+            display: none;
+        }
+        
+        .results.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .result-section {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .result-title {
+            color: #2d3748;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .mix-values {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .mix-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            color: #2d3748;
+        }
+        
+        .mix-label {
+            font-size: 12px;
+            color: #718096;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .mix-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 4px;
+        }
+        
+        .mix-unit {
+            font-size: 16px;
+            color: #4a5568;
+            font-weight: 600;
+        }
+        
+        .total-volume-box {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.4);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .protocol-step {
+            padding: 12px;
+            background: white;
+            border-left: 3px solid #667eea;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        
+        .warning {
+            background: #fff5f5;
+            border: 1px solid #feb2b2;
+            color: #c53030;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        
+        .info {
+            background: #ebf8ff;
+            border: 1px solid #90cdf4;
+            color: #2c5282;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        
+        .success {
+            background: #f0fdf4;
+            border: 1px solid #86efac;
+            color: #166534;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        
+        .buttons-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .action-btn {
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+        
+        .copy-btn {
+            background: #48bb78;
+            color: white;
+        }
+        
+        .clear-btn {
+            background: #fc8181;
+            color: white;
+        }
+        
+        .print-btn {
+            background: #4299e1;
+            color: white;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .verification-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .verification-item {
+            font-size: 14px;
+            color: #4a5568;
+        }
+        
+        .verification-label {
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        @media print {
+            body {
+                background: white;
+            }
+            .calculator {
+                box-shadow: none;
+                padding: 20px;
+            }
+            .buttons-row {
+                display: none;
+            }
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #718096;
+            font-size: 12px;
+        }
+        
+        .example-link {
+            color: #667eea;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .example-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="calculator">
+            <h1>🧬 Cell Seeding Calculator</h1>
+            <p class="subtitle">
+                96-Well Plates • Free Online Tool • 
+                <a class="example-link" onclick="loadExample(); return false;">Load Example</a>
+            </p>
+            
+            <div class="input-group">
+                <label>Initial Concentration (cells/mL)</label>
+                <input type="text" id="initialConc" placeholder="e.g., 2000000 or 2e6">
+                <div class="hint">Your cell count from hemocytometer or automated counter</div>
+            </div>
+            
+            <div class="input-group">
+                <label>Desired Cells per Well</label>
+                <input type="text" id="cellsPerWell" placeholder="e.g., 100000 or 1e5">
+                <div class="hint">Target cell number for each well</div>
+            </div>
+            
+            <div class="input-group">
+                <label>Volume per Well (µL)</label>
+                <input type="text" id="volPerWell" value="100">
+                <div class="hint">Final volume in each well (typically 100-200 µL)</div>
+            </div>
+            
+            <div class="input-group">
+                <label>Number of Wells to Seed</label>
+                <input type="text" id="numWells" value="96">
+                <div class="hint">How many wells you're actually using (max 96)</div>
+            </div>
+            
+            <div class="input-group">
+                <label>Extra Volume (%)</label>
+                <input type="text" id="extraVol" value="20">
+                <div class="hint">Additional volume to account for pipetting loss (20-30% recommended)</div>
+            </div>
+            
+            <button class="calculate-btn" onclick="calculate()">
+                🧮 Calculate Volumes
+            </button>
+            
+            <div id="results" class="results"></div>
+            
+            <div class="footer">
+                Cell Seeding Calculator v2.0 • Share this link with colleagues
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function formatVolume(volumeMl) {
+            if (volumeMl < 0.001) {
+                return { value: (volumeMl * 1000000).toFixed(1), unit: 'nL' };
+            } else if (volumeMl < 1) {
+                return { value: (volumeMl * 1000).toFixed(1), unit: 'µL' };
+            } else if (volumeMl < 10) {
+                return { value: volumeMl.toFixed(3), unit: 'mL' };
+            } else {
+                return { value: volumeMl.toFixed(2), unit: 'mL' };
+            }
+        }
+        
+        function parseNumber(value) {
+            if (!value) return NaN;
+            value = value.toString().replace(/[,\s]/g, '');
+            return parseFloat(value);
+        }
+        
+        function formatNumber(num, decimals = 2) {
+            if (num >= 1e6) {
+                return num.toExponential(decimals);
+            }
+            return num.toLocaleString('en-US', { maximumFractionDigits: decimals });
+        }
+        
+        function calculate() {
+            try {
+                const initialConc = parseNumber(document.getElementById('initialConc').value);
+                const cellsPerWell = parseNumber(document.getElementById('cellsPerWell').value);
+                const volPerWell = parseNumber(document.getElementById('volPerWell').value);
+                const numWells = Math.min(96, parseNumber(document.getElementById('numWells').value));
+                const extraVol = parseNumber(document.getElementById('extraVol').value);
+                
+                if (isNaN(initialConc) || isNaN(cellsPerWell) || isNaN(volPerWell) || 
+                    isNaN(numWells) || isNaN(extraVol)) {
+                    alert('Please enter valid numbers in all fields');
+                    return;
+                }
+                
+                if (initialConc <= 0 || cellsPerWell <= 0 || volPerWell <= 0 || numWells <= 0) {
+                    alert('All values must be positive numbers');
+                    return;
+                }
+                
+                const volPerWellMl = volPerWell / 1000;
+                const requiredConc = cellsPerWell / volPerWellMl;
+                
+                if (requiredConc > initialConc) {
+                    alert(`Error: Your initial concentration is too dilute.`);
+                    return;
+                }
+                
+                const dilutionFactor = initialConc / requiredConc;
+                const totalVolNeeded = numWells * volPerWellMl;
+                const totalVolWithExtra = totalVolNeeded * (1 + extraVol/100);
+                const cellVolMl = totalVolWithExtra / dilutionFactor;
+                const mediaVolMl = totalVolWithExtra - cellVolMl;
+                
+                const cellVol = formatVolume(cellVolMl);
+                const mediaVol = formatVolume(mediaVolMl);
+                const totalVol = formatVolume(totalVolWithExtra);
+                
+                const totalCellsUsed = initialConc * cellVolMl;
+                const totalCellsSeeded = cellsPerWell * numWells;
+                const efficiency = (totalCellsSeeded / totalCellsUsed * 100);
+                
+                let efficiencyMsg = '';
+                if (efficiency > 90) {
+                    efficiencyMsg = '<div class="success">✅ Excellent efficiency!</div>';
+                } else if (efficiency > 80) {
+                    efficiencyMsg = '<div class="info">ℹ️ Good efficiency.</div>';
+                } else {
+                    efficiencyMsg = '<div class="warning">⚠️ Low efficiency. Consider reducing extra volume %.</div>';
+                }
+                
+                document.getElementById('results').innerHTML = `
+                    <div class="highlight-box">
+                        <div style="font-size: 20px; margin-bottom: 20px; font-weight: 600;">
+                            🧪 MIX PREPARATION
+                        </div>
+                        <div class="mix-values">
+                            <div class="mix-item">
+                                <div class="mix-label">Cell Suspension</div>
+                                <div class="mix-value">${cellVol.value}</div>
+                                <div class="mix-unit">${cellVol.unit}</div>
+                            </div>
+                            <div class="mix-item">
+                                <div class="mix-label">Culture Media</div>
+                                <div class="mix-value">${mediaVol.value}</div>
+                                <div class="mix-unit">${mediaVol.unit}</div>
+                            </div>
+                        </div>
+                        <div class="total-volume-box">
+                            <div style="font-size: 16px; margin-bottom: 10px;">
+                                <strong>Total Volume:</strong> 
+                                <span style="font-size: 20px; font-weight: 700;">${totalVol.value}</span>
+                                <span style="font-size: 16px;">${totalVol.unit}</span>
+                            </div>
+                            <div style="font-size: 14px;">
+                                <strong>Dispense:</strong> ${volPerWell} µL per well
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="result-section">
+                        <div class="result-title">📊 Summary</div>
+                        <div class="verification-grid">
+                            <div class="verification-item">
+                                <span class="verification-label">Dilution Factor:</span><br>
+                                1:${dilutionFactor.toFixed(1)}
+                            </div>
+                            <div class="verification-item">
+                                <span class="verification-label">Efficiency:</span><br>
+                                ${efficiency.toFixed(1)}%
+                            </div>
+                        </div>
+                        ${efficiencyMsg}
+                    </div>
+                    
+                    <div class="buttons-row">
+                        <button class="action-btn copy-btn" onclick="copyResults()">📋 Copy</button>
+                        <button class="action-btn print-btn" onclick="window.print()">🖨️ Print</button>
+                        <button class="action-btn clear-btn" onclick="clearAll()">🔄 Clear</button>
+                    </div>
+                `;
+                
+                document.getElementById('results').classList.add('show');
+                document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+        
+        function copyResults() {
+            const text = document.getElementById('results').innerText;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => {
+                    const btn = document.querySelector('.copy-btn');
+                    btn.textContent = '✓ Copied!';
+                    setTimeout(() => { btn.textContent = '📋 Copy'; }, 2000);
+                });
+            } else {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert('Copied!');
+            }
+        }
+        
+        function clearAll() {
+            document.getElementById('initialConc').value = '';
+            document.getElementById('cellsPerWell').value = '';
+            document.getElementById('volPerWell').value = '100';
+            document.getElementById('numWells').value = '96';
+            document.getElementById('extraVol').value = '20';
+            document.getElementById('results').classList.remove('show');
+        }
+        
+        function loadExample() {
+            document.getElementById('initialConc').value = '2e6';
+            document.getElementById('cellsPerWell').value = '10000';
+            document.getElementById('volPerWell').value = '100';
+            document.getElementById('numWells').value = '48';
+            document.getElementById('extraVol').value = '20';
+            calculate();
+        }
+        
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') calculate();
+        });
+    </script>
+</body>
+</html>
